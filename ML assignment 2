@@ -1,0 +1,43 @@
+question:
+
+Find the global minimum point and value for the function f(x)=x4 + 3x2 + 10 Do manual calculations for two iterations Find the optimal solution using python programming?
+
+solution:(By manual calculation)
+
+**************************ITERATION-1*****************************
+f(x)=x^4+3x^2+10
+let x=2 and eta=0.01
+df(x)/dx=4x^3+6x  = 4(8)+12 = 44
+delta x=-0.01*44 = -0.44
+updated x = 2-0.04
+          =1.56
+          
+*************************ITERATION-2******************************
+now x=1.56 and eta=0.01
+df(x)/dx=4x^3+6x  = 4(1.56)^3+6(1.56) = 24.545
+delta x=-0.01*24.545 = -0.245
+updated x = 1.56-0.245
+          =1.31
+          
+*************************PYTHON CODE*****************************
+x=2
+eta=0.05
+eps=0.000001
+del_x=1
+maxiterations=10000
+iterations=0
+def deriv(x):
+    xde=4*x**3+6*x 
+    return xde
+
+while abs(del_x)>eps and iterations<maxiterations:
+    prev=x
+    del_x=-eta*deriv(prev)
+    x=x+del_x
+    iterations=iterations+1
+    print("Iteration",iterations,"\n X value is",x)
+print("the local min ocurs at",x)   
+
+solution:
+
+The local min ocurs at 1.5114009452630606e-05 in 179 iterations.
