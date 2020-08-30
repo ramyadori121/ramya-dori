@@ -1,0 +1,87 @@
+Find the global minimum point and value for the function
+f(x)=3x2 + 5e−y + 10
+Do manual calculations for two iterations
+Find the optimal solution using python programming
+
+solution 
+***************manual calculation******************
+considering x=2,y=3,eta=3,iter=1,epoch=100
+
+ITERATION-1:                                                    
+                                   
+At x=2   d(x,y)/dx=6x                                                  
+                  =6(2)                                                 
+                  =12
+                  
+At y=5   d(x,y)/dy=-5e^(-3)
+                  =-0.2489
+                 
+delta(x)=-eta*derivate
+        =-0.01*0.12=-0.12
+        
+  x=x+delta(x)
+  =2-0.12
+  =1.88
+  
+  delta(y)=-eta*derivate
+           =-0.01*-0.25
+           =0.025
+           
+  x=x+delta(y)
+  =3+0.0025
+  =3.0025
+                  
+ ITERATION-2:                                            
+                                   
+At x=1.88   d(x,y)/dx=6x                                                   
+                  =6(1.88)                                                 
+                  =11.28
+                  
+At y=3.0025   d(x,y)/dy=-5e^(-3.0025)
+                  =-0.248
+                 
+delta(x)=-eta*derivate
+        =-0.01*11.28=-0.1128
+        
+  x=x+delta(x)
+  =1.88-0.1128
+  =1.76
+  
+  delta(y)=-eta*derivate
+           =-0.01*-0.25
+           =0.025
+           
+  x=x+delta(y)
+  =3.0025+0.00248
+  =3.00498
+  
+  
+  *********************python code***********************
+  import math 
+x_o=2
+y_o=3
+eta=0.01
+max_iterations=100
+iterations=1
+eps=100
+del_x=1
+del_y=1
+def deriv(x,y):
+    x_deriv=6*(x)
+    y_deriv=-5*math.exp(-y)
+    return x_deriv,y_deriv
+while max(abs(del_x),abs(del_y))<eps and iterations<max_iterations:
+    prev_x=x_o
+    prev_y=y_o
+    del_x,del_y=deriv(prev_x,prev_y)
+    del_x=-eta*del_x
+    del_y=-eta*del_y
+    x_o=x_o+del_x
+    y_o=y_o+del_y
+    iterations=iterations+1
+    print("iterations",iterations,"\n x value is",x_o,"\n y value is",y_o)
+print("the local minimum occurs at",x_o,y_o)    
+
+solution:
+
+the local minimum occurs at  x=0.0043720739798374444 and at y=3.2205166360520963
