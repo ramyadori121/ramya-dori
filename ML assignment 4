@@ -1,0 +1,144 @@
+*******************Iteration-1(SAMPLE 1)**********************
+step:1   [7.6,157],eta=0.01,m=1,c=-1
+step-2   de/dm|m=1===>-(y-mx-c)*(-x)
+                    =1143.04
+         de/dc|c=-1==>-(y-mx-c)
+                     =-150.4
+                     
+step-3   delta(m)=-eta(de/dm)=-(0.01)(1143.04)
+                          =-11.430
+                          
+         delta(c)=-eta(de/dc)=-(0..01)(-150.4)
+                            =1.504
+     
+step-4   m=m+delta(m)=1+(11.43)=-10.43
+         c=c+delta(c)=-1+(1.504)=0.504
+         
+     ITERATION-2
+     
+step:1   [7.6,157],eta=0.01,m=-10.43,c=-0.504
+step-2   de/dm|m=-10.43===>-(y-mx-c)*(-x)
+                    =1794.955
+         de/dc|c=0.504==>-(y-mx-c)
+                     =-235.868
+                     
+step-3   delta(m)=-eta(de/dm)=-17.949
+                          
+         delta(c)=-eta(de/dc)=2.358
+     
+step-4   m=m+delta(m)=-28.379
+         c=c+delta(c)=2.868
+         
+***************************Iteration-1(SAMPLE 2)*********************
+step:1   [7.1,174],eta=0.01,m=1,c=-1
+step-2   de/dm|m=1===>-(y-mx-c)*(-x)
+                    =1192.09
+         de/dc|c=-1==>-(y-mx-c)
+                     =-167.9
+                     
+step-3   delta(m)=-eta(de/dm)=-11.920
+                          
+         delta(c)=-eta(de/dc)=1.679
+     
+step-4   m=m+delta(m)=1+(11.43)=-10.920
+         c=c+delta(c)=-1+(1.504)=0.679
+         
+         ITERATION-2
+         
+step:1   [7.6,157],eta=0.01,m=-10.920,c=-0.679
+step-2   de/dm|m=-10.43===>-(y-mx-c)*(-x)
+                    =1781.056
+         de/dc|c=0.504==>-(y-mx-c)
+                     =-250.853
+                     
+step-3   delta(m)=-eta(de/dm)=-17.810
+                          
+         delta(c)=-eta(de/dc)=2.508
+     
+step-4   m=m+delta(m)=-28.73
+         c=c+delta(c)=3.187
+         
+******************************PYTHON CODE**************************
+import pandas as pd
+import numpy as np
+data=pd.read_csv('groundwater_survey.csv')
+data.skew()
+log_X=np.log(np.log(np.log(data['X'])))
+log_X.skew()
+x_train=data.iloc[0:30,0]
+y_train=data.iloc[0:30,0]
+x_test=data.iloc[30:34,1]
+y_test=data.iloc[30:35,1]
+x_train=x_train.iloc[1:].values
+x_train=x_train.reshape(len(x_train),1)
+y_train=y_train.iloc[1:].values
+y_train=y_train.reshape(len(y_train),1)
+x_test=x_test.iloc[1:].values
+x_test=x_test.reshape(len(x_test),1)
+y_test=y_test.iloc[1:].values
+y_test=y_test.reshape(len(y_test),1)
+def slr_sgd(x,y,epochs):
+    length=len(x)
+    i=0
+    j=0
+    m=[1]*(length)
+    c=[1]*(length)
+    a1=[]
+    a2=[]
+    y_pre=[]
+    while(j<epochs):
+        while(i<length):
+            k=(y[i]-(m[i]*x[i])-c[i])
+            dm=-0.01*(k*x[i])
+            dc=-0.01*k
+            m[i]=m[i]+dm
+            c[i]=c[i]+dc
+            a1.append(m[i])
+            a2.append(c[i])
+            i=i+1
+        j=j+1
+    return a1,a2
+    m,c=slr_sgd(x_train,y_train,2)
+print(m)
+print(c)
+i=0
+y_pred=[]
+while i<29:
+    y_predict=(m[i]*x_train[i])-c[i]
+    y_pred.append(y_predict)
+    i=i+1
+print(y_pred)
+import math
+from sklearn.metrics import mean_squared_error 
+from sklearn.metrics import mean_absolute_error
+def accuracy_op(y_train,y_pred):
+    mse = math.sqrt(mean_squared_error(y_train,y_pred)) 
+    print('Root mean square error', mse) 
+    mse = (mean_squared_error(y_train,y_pred)) 
+    print('Mean square error', mse) 
+    mae=mean_absolute_error(y_train, y_pred)
+    print('Mean absolute error', mae)   
+print(accuracy_op(y_train,y_pred))
+
+Root mean square error 0.417941371899011
+Mean square error 0.1746749903448274
+Mean absolute error 0.4110344827586204
+None
+
+
+m1,c1=slr_sgd(x_test,y_test,2)
+print(m1,c1)
+i=0
+yt_pred=[]
+while i<3:
+    yt_predict=(m1[i]*x_test[i])-c1[i]
+    yt_pred.append(yt_predict)
+    i=i+1
+print(yt_pred)
+print(accuracy_op(y_test,yt_pred))
+
+
+Root mean square error 210.62789440147762
+Mean square error 44364.1099
+Mean absolute error 180.26333333333332
+None
